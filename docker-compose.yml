@@ -1,0 +1,27 @@
+version: '2.2'
+services:
+  nginx:
+    image: mmadraimov/nginx-shadowsocks
+    restart: always
+    container_name: nginx
+    networks:
+      - ss-network
+    volumes:
+      - ./nginx/http.conf.d:/etc/nginx/http.conf.d
+      - ./nginx/stream.conf.d:/etc/nginx/stream.conf.d
+      - ./logs/nginx:/var/log/nginx
+    ports:
+      - 80:80
+    depends_on:
+      - ss-backend1
+  ss-backend1:
+    networks:
+      - ss-network
+    container_name: ss-backend1
+    image: shadowsocks/shadowsocks-libev
+    restart: always
+    environment:
+      PASSWORD: <password>
+
+networks:
+  ss-network:
